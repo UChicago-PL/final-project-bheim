@@ -1,0 +1,39 @@
+### Obsidian Graph Analysis
+
+Ben Heim
+bheim@uchicago.edu
+
+### Introduction & Motivation
+
+I've been using Obsidian - a personal knowledge management software - off and on for the past few years. The beauty of this software is its abilities to link notes together using brackets - such as writing [[Toast]] in Butter.md links Toast to Butter. This enables the user to find interesting ideas and connections, building upon their prior knowledge.
+
+My goal with this project was to imitate some of the functionalities that the obsidian program has as well as build further functionalities that I am interested in.
+
+**NB:** For the purposes of this project, I didn't want to use my own obsidian repository to show off what it is capable of since my files are private. So, I had an LLM generate an extensive knowledge network to be able to show off the capabilities. I told it to make it functional programming related.
+
+### Functionalities
+
+#### The main file and interacting with the program
+
+To run the main file, do cabal run obsidian-graph -- "test/test-files" 
+That folder contains the LLM-generated obsidian files. Feel free to mess around yourself using ghci but the main file gets you a good sense of the range of computations that can be done.
+
+#### The src files - the backbone
+
+**Types.hs** - this fiile defines the various types and and datatypes that I defined to make this project work. The most important data types are Note, which includes the name of the Note and its links as well as the content of the note. Triangles also have an important functionality in helping the user connect ideas they have yet to connect but that have the potential to connect.
+
+**Parser.hs** - this file takes a directory and will unwrap all its directories while collecting the markdown files. All obsidian text files are in the .md format so it will select only those files. It basically finds all the mdfiles, parses each of those files for their name, content, and links, and then this can be used to build a graph in GraphBuilder.hs.
+
+**GraphBuilder.hs** - this file takes in the list of notes that the parser finds and then will make a graph with them. It also makes the graph undirected as obsidian doesn't enforce a hierarchy of graph connections - every connection has no direction.
+
+**Metrics.hs** - this file performs simply computations to reveal properties of a graph. It includes things like the number of nodes, edges, and the most connected nodes.
+
+**Neighbors.hs** - an important part of analyzing the graph is understanding what each node is linked to and how the neighbors of two notes compare. This file also finds openTriangles - note where A is connected to B and B is connected to C but A and C are yet to be connected.
+
+**Cluster.hs** - I had more ambition with clusters but basically it just does a bfs to find all the notes findable from a specific node.
+
+**Path.hs** -  I felt like I was back in algorithms as I wrote a bfs and shortestPath function. This is a cool functionality that obsidian doesn't have, so I'm glad I wrote this.
+
+**Visualization.hs** - this file takes a garph and converts it into .dot format. It's not a very fun file to read as it basically just does list comprehension on the nodes and puts them in .dot format.
+
+**Pretty.hs** - this file prints some common statistics and interesting parts of the program. I mainly built it to provide a slightly nicer way to view the functionalities.

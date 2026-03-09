@@ -1,6 +1,7 @@
 module Parser where
 import Types
-import System.Directory (listDirectory)
+import Control.Monad
+import System.Directory (listDirectory, doesDirectoryExist, doesFileExist)
 import System.FilePath (takeBaseName, takeExtension, (</>))
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
@@ -24,6 +25,15 @@ parseFile path = do
 
 parseVault :: FilePath -> IO [Note]
 parseVault dir = do
-        files <- listDirectory dir
-        let mds = filter(\f -> takeExtension f == ".md") files
-        mapM parseFile (map (dir </>) mds)
+        mdFiles <- findMdFiles dir
+        mapM parseFile mdFiles
+
+findMdFiles :: FilePath -> IO [FilePath]
+findMdFiles dir = do
+    contents <- listDirectory dir
+    let fullPaths = map (dir </>) contents
+    files <- filterM doesFileExist fullPaths -- checks if it's a file or directory
+    dirs <- filterM doesDirectoryExist fullPaths
+    let mdFiles = filter(\f -> takeExtension f == ".md") files
+    subFiles <- mapM findMdFiles dirs -- recursive call to get all files
+    return (mdFiles ++ concat subFiles)

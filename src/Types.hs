@@ -15,7 +15,7 @@ type NoteContent = String
 
 type Graph = Map.Map NoteName (Set.Set NoteName)
 
-type Cluster = Set.Set Note
+type Cluster = Set.Set NoteName
 
 data Triangle = Triangle{
  tNoteA :: NoteName

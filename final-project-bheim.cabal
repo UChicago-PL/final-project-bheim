@@ -17,10 +17,10 @@ library
         GraphBuilder
         Metrics
         Neighbors
-        --Clusters
+        Clusters
         Paths
-        --Visualization
-        --PrettyPrint
+        Visualization
+        Pretty
     hs-source-dirs: src
     build-depends:
         base >= 4.14,
